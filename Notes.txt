@@ -1,0 +1,10 @@
+Steps :
+- App GUI avec python (tkinter)
+- Initialiser et relier db
+- Utiliser le un outil de chiffrage/dechiffrage (Frenet ?)
+
+Fonctions de l'app :
+- Se connecter avec un mdp
+- Fonction de recherche + affichage de l'username et mdp
+
+Bonus (clip to clipboard)
