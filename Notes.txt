@@ -5,6 +5,7 @@ Steps :
 
 Fonctions de l'app :
 - Se connecter avec un mdp
-- Fonction de recherche + affichage de l'username et mdp
+- Fonction de recherche + affichage de l'username et mdp et du site
+- Ajouter des mdp
 
 Bonus (clip to clipboard)
