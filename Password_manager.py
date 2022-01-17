@@ -1,7 +1,7 @@
 from tkinter import * # (python GUI)
 from tkinter import messagebox
 
-def home_wondow():
+def home_window():
     # main window settings
     window = Tk()
     window.title('Your Password Manager')
@@ -20,10 +20,10 @@ def login_window():
     def login():
         print("Trying to login... Please wait.")
         if identifier.get() == "Alex":
-            messagebox.showinfo("Login succeed !", "You Have Now Logged In.", icon="info")
+            messagebox.showinfo("Login succeed !", "You have now logged in.", icon="info")
 
             window.destroy()
-            pm_home()
+            home_window()
 
         else:
             messagebox.showinfo("Login failed !", "Id or password is wrong.", icon="error")

@@ -5,7 +5,9 @@ Steps :
 
 Fonctions de l'app :
 - Se connecter avec un mdp
-- Fonction de recherche + affichage de l'username et mdp et du site
+- Fonction de recherche + affichage de l'username, email et mdp et du site
 - Ajouter des mdp
+- Modifier des mdp
+- Supprimer des comptes
 
 Bonus (clip to clipboard)
