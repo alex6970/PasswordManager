@@ -9,7 +9,7 @@ def create_connection():
     cur = None
 
     try:
-        co = sqlite3.connect('pass.db')
+        co = sqlite3.connect('database/pass.db')
         cur = co.cursor()
 
     except Exception as e:
@@ -18,13 +18,13 @@ def create_connection():
     return co, cur
 
 
+
+
+
 def close_connection(co):
     """
     Closes the current a connection to the password db.
     """
-
-    co = None
-    cur = None
 
     try:
         co.commit()
@@ -32,6 +32,8 @@ def close_connection(co):
 
     except Exception as e:
         print(e)
+
+
 
 
 
@@ -52,8 +54,9 @@ def create_pw_table():
     password TEXT
     )""")
 
-    conn.commit()
+    # cursor.execute(""" INSERT INTO passwords(website,username,email,password) VALUES ('Facebook', 'admin', 'admin@gmail.com', 'admin123') """)
 
-    conn.close()
+    close_connection(conn)
+
 
 create_pw_table()

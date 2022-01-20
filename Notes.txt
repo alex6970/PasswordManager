@@ -16,10 +16,23 @@ Bonuses :
 - lock script at the end (cf below)
 - improve design
 - improve optimisation (windows repeating etc)
+- Open private key from txt file (cf below)
 
 
 
 69_G0FUCKY0URS3LF_70
+
+
+
+OPEN FILE :
+
+filename = askopenfilename(title="Ouvrir votre document",filetypes=[('txt files','.txt'),('all files','.*')])
+fichier = open(filename, "r")
+content = fichier.read()
+fichier.close()
+
+Label(fenetre, text=content).pack(padx=10, pady=10)
+
 
 
 
