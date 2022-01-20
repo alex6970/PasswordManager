@@ -6,6 +6,7 @@ def create_connection():
     """
 
     co = None
+    cur = None
 
     try:
         co = sqlite3.connect('pass.db')
@@ -17,12 +18,27 @@ def create_connection():
     return co, cur
 
 
-
-
-
-def create_table():
+def close_connection(co):
     """
-    Creates the password table if doesn't exist.
+    Closes the current a connection to the password db.
+    """
+
+    co = None
+    cur = None
+
+    try:
+        co.commit()
+        co.close()
+
+    except Exception as e:
+        print(e)
+
+
+
+
+def create_pw_table():
+    """
+    Creates the Password Table if doesn't exist.
     """
 
 
@@ -40,4 +56,4 @@ def create_table():
 
     conn.close()
 
-create_table()
+create_pw_table()

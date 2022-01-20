@@ -10,4 +10,23 @@ Fonctions de l'app :
 - Modifier des mdp
 - Supprimer des comptes
 
-Bonus (clip to clipboard)
+
+Bonuses :
+- clip to clipboard
+- lock script at the end (cf below)
+- improve design
+- improve optimisation (windows repeating etc)
+
+
+
+69_G0FUCKY0URS3LF_70
+
+
+
+
+LOCK SCRIPT :
+
+import py_compile
+
+script = "C:\\temp\\myscript.py"
+py_compile.compile(script)
