@@ -308,10 +308,12 @@ def readPassLibrary():
     dataBox.tag_configure('oddrow', background='white')
     dataBox.tag_configure('evenrow', background='lightblue')
 
+    # insert data inside treeview
     global count
     count = 0
 
     for record in fakeData:
+
         if count % 2 == 0:
             dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2]), tags=('evenrow',))
         else:
