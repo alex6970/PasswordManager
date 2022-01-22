@@ -188,6 +188,8 @@ def submitKey():
 
 def home_window():
 
+    global window_home
+
     window_home = Tk()
     window_home.title('Welcome the PassMan home screen.')
     #center window
@@ -240,6 +242,8 @@ def home_window():
 
 def readPassLibrary():
 
+    global window_read
+
     window_read = Tk()
     window_read.title('Your accounts and passwords.')
     #center window
@@ -254,7 +258,7 @@ def readPassLibrary():
     frame = Frame(window_read, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
 
-    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white')
+    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonRead)
     btnBack.pack(side=LEFT,padx=(0, 100), pady=(20,))
 
     title = Label(frame, text="All your accounts and passwords.",font=("Verdana", 14), height=2, bg='#130f40', fg='white')
@@ -274,50 +278,46 @@ def readPassLibrary():
     style.configure('Treeview', rowheight=25)
     style.map('Treeview', background=[('selected', '#130f40')])
 
-    dataBox = ttk.Treeview(treeview_frame, yscrollcommand=tree_scroll.set, selectmode='extended', columns=['Website', 'Username', 'Password'])
+    dataBox = ttk.Treeview(treeview_frame, yscrollcommand=tree_scroll.set, selectmode='extended', show='headings', columns=['Website', 'Username', 'Email', 'Password'])
     dataBox.pack()
 
     tree_scroll.config(command=dataBox.yview)
 
-    dataBox.column('#0', width=0, stretch=NO)
     dataBox.column('Website', anchor=W, width=140)
     dataBox.column('Username', anchor=CENTER, width=140)
+    dataBox.column('Email', anchor=CENTER, width=140)
     dataBox.column('Password', anchor=CENTER, width=140)
 
-    dataBox.heading('#0', text="", anchor=W)
     dataBox.heading('Website', text="Website", anchor=CENTER)
     dataBox.heading('Username', text="Username", anchor=CENTER)
+    dataBox.heading('Email', text="Email", anchor=CENTER)
     dataBox.heading('Password', text="Password", anchor=CENTER)
 
-    fakeData = [
-        ["Instagram", "Gandalf", "hbdhjs67DSHBds$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["Snapchat", "Alex", "sdbjk89$!$ù"],
-        ["WhatsApp", "John", "cleks$ù"]
-    ]
+    # Access database to fecth all data
+    try:
+        co, cur = create_connection()
+
+        cur.execute(""" SELECT website, username, email, password FROM passwords """)
+        fetch = cur.fetchall()
+
+        close_connection(co)
+    except Exception as e:
+
+        messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+        co.rollback()
 
     dataBox.tag_configure('oddrow', background='white')
     dataBox.tag_configure('evenrow', background='lightblue')
 
     # insert data inside treeview
-    global count
     count = 0
 
-    for record in fakeData:
+    for record in fetch:
 
         if count % 2 == 0:
-            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2]), tags=('evenrow',))
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('evenrow',))
         else:
-            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2]), tags=('oddrow',))
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('oddrow',))
 
         count = count + 1
 
@@ -326,6 +326,13 @@ def readPassLibrary():
 
 
     window_read.mainloop()
+
+
+def backButtonRead():
+
+    window_read.destroy()
+    home_window()
+
 
     # co, cur = create_connection()
     #
