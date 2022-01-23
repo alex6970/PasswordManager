@@ -215,7 +215,7 @@ def home_window():
     btnRead = Button(frame2, text="Passwords library",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white', command=readPassLibrary)
     btnRead.pack(pady=5)
 
-    btnCreate = Button(frame2, text="Add new password",font=("Verdana", 12), height=2, width = 30, bg='#30336b', fg='white')
+    btnCreate = Button(frame2, text="Add new password",font=("Verdana", 12), height=2, width = 30, bg='#30336b', fg='white', command=addNewPass)
     btnCreate.pack(pady=5)
 
     btnUpdate = Button(frame2, text="Update password/account info",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white')
@@ -328,26 +328,148 @@ def readPassLibrary():
     window_read.mainloop()
 
 
+
+
+
+
+
+
+# --------------------------------------------CREATE---------------------------------------------------
+
+def addNewPass():
+
+    global window_create
+
+    window_create = Tk()
+    window_create.title('Create a new account with password')
+    #center window
+    windowWidth = 550
+    windowHeight = 400
+    positionRight = int(window_create.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window_create.winfo_screenheight()/2.3 - windowHeight/2)
+    window_create.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    window_create.resizable(width=FALSE, height=FALSE)
+    window_create['bg']='#130f40'
+
+
+
+    frame = Frame(window_create, bg='#130f40') #bg='white' to undeerstand better the placement
+    frame.pack(side=TOP)
+
+    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white')
+    btnBack.pack(side=LEFT, padx=(10, 80), pady=(10,))
+
+    title = Label(frame, text="All your accounts and passwords.",font=("Verdana", 12), height=2, bg='#130f40', fg='white')
+    title.pack(side=RIGHT, padx=(0,130), pady=(10,))
+
+
+
+    # Creation Form
+    labelFrame = LabelFrame(window_create, text="New password form", bg='#130f40',fg='white', font=('Verdana', 8))
+    labelFrame.pack(side=TOP, pady=(10,), ipady=20)
+
+
+    frameLabels = Frame(labelFrame, bg='#130f40')
+    frameLabels.pack(side=LEFT, padx=(35,30))
+
+    frameInputs = Frame(labelFrame, bg='#130f40')
+    frameInputs.pack(side=RIGHT, padx=(0,35))
+
+
+    # LABELS
+    labelWebsite = Label(frameLabels, text="Website :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelWebsite.pack(pady=(0,20), padx=(0,20))
+
+    labelUsername = Label(frameLabels, text="Username :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelUsername.pack(padx=(0,3))
+
+    labelEmail = Label(frameLabels, text="Email :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelEmail.pack(pady=20, padx=(0,40))
+
+    labelPass = Label(frameLabels, text="Password :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelPass.pack(padx=(0,8))
+
+    # ENTRIES
+    websiteVar = StringVar()
+    usernameVar = StringVar()
+    emailVar = StringVar()
+    passVar = StringVar()
+    inputWebsite = Entry(frameInputs, textvariable = websiteVar, width=35)
+    inputWebsite.pack(ipady=2,pady=(0,20))
+
+    inputUsername = Entry(frameInputs, textvariable = usernameVar, width=35)
+    inputUsername.pack(ipady=2)
+
+    inputEmail = Entry(frameInputs, textvariable = emailVar, width=35)
+    inputEmail.pack(ipady=2,pady=20)
+
+    inputPass = Entry(frameInputs, textvariable = passVar, width=35)
+    inputPass.pack(ipady=2)
+
+
+    # Buttons
+    frameBtns = Frame(window_create, bg='#130f40')
+    frameBtns.pack(side=BOTTOM, pady=(0,40))
+
+    # Clear button function
+    def clearData():
+        if len(inputWebsite.get()) == 0 and len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "All your fields are empty !", icon="error")
+        else:
+            MsgBox = messagebox.askquestion ('Clear entries','Really wanna clear all ?',icon = 'warning')
+            if MsgBox == 'yes':
+
+                inputWebsite.delete(0, 'end')
+                inputUsername.delete(0, 'end')
+                inputEmail.delete(0, 'end')
+                inputPass.delete(0, 'end')
+
+
+    btnClear = Button(frameBtns, text="Clear",font=("Verdana", 12), bg='#30336b', fg='white', command=clearData)
+    btnClear.pack(side=LEFT, padx=(0,273))
+
+    # Add data button function
+    def addData():
+        if len(inputWebsite.get()) == 0 and len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "All your fields are empty !", icon="error")
+        elif len(inputWebsite.get()) == 0 and len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "You must fill Website and password fiels !", icon="warning")
+
+        else:
+            MsgBox = messagebox.askquestion ('Add new data','Are you sure you wanna create new record ?',icon = 'warning')
+            if MsgBox == 'yes':
+
+                # TODO: encrypt + insert
+            
+
+
+    btnAdd = Button(frameBtns, text="Add new",font=("Verdana", 12), bg='#30336b', fg='white')
+    btnAdd.pack(side=RIGHT, padx=(2,0))
+
+
+
+
+
+    window_create.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------------CHANGING-WINDOW------------------------------------------------
+
 def backButtonRead():
 
     window_read.destroy()
     home_window()
 
 
-    # co, cur = create_connection()
-    #
-    # cur.execute("""SELECT * FROM passwords """)
-    #
-    # # display query data
-    # rows = cur.fetchall()
-    # # for row in rows:
-    # #     for cell in row:
-    # #         print(cell)
-    # print(rows)
-    #
-    # close_connection(co)
 
 
-
-
-readPassLibrary()
+addNewPass()
