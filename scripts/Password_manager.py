@@ -4,7 +4,7 @@ from tkinter import filedialog
 from tkinter import ttk
 import bcrypt
 
-from encryption_decryption import encrypt_data, decrypt_data
+from encryption_decryption import encrypt_data, decrypt_data, check_key
 from database_management import *
 
 
@@ -71,8 +71,6 @@ def login(): # help(login)
 
     hashed = b'$2b$12$q3W5AOX8wFrXm2RqtNt3D.iqqvdL2EDyM3Be3tAQi3Ifbh3dU5C2q' # TO STORE IN DATABASE
     input_pw = password.get().encode('utf-8')
-
-    print("Trying to login... Please wait.")
 
     if identifier.get() == "Alex" and bcrypt.checkpw(input_pw, hashed):
         messagebox.showinfo("Login succeed !", "You have now logged in.", icon="info")
@@ -165,19 +163,18 @@ def submitKey():
         Function checking if private key is the right one that can decrypt the database.
     """
 
-    # msg = 'Hello how ya doin ?'
+    if check_key(pvKey.get().encode()):
 
-    global encoded_pvKey
-    encoded_pvKey = pvKey.get().encode()
+        global encoded_pvKey
+        encoded_pvKey = pvKey.get().encode()
 
-    window_sub.destroy()
-    home_window()
+        window_sub.destroy()
+        home_window()
 
-    # crypt_msg = encrypt_data(msg, encoded_pvKey)
-    # print(crypt_msg)
-    #
-    # decrypted_msg = decrypt_data(crypt_msg, encoded_pvKey)
-    # print(decrypted_msg)
+    else:
+        messagebox.showinfo("Wrong key", "The provided private key is invalid !", icon="error")
+
+
 
 
 
@@ -356,7 +353,7 @@ def addNewPass():
     frame = Frame(window_create, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP)
 
-    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white')
+    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonAdd)
     btnBack.pack(side=LEFT, padx=(10, 80), pady=(10,))
 
     title = Label(frame, text="All your accounts and passwords.",font=("Verdana", 12), height=2, bg='#130f40', fg='white')
@@ -411,6 +408,8 @@ def addNewPass():
     frameBtns = Frame(window_create, bg='#130f40')
     frameBtns.pack(side=BOTTOM, pady=(0,40))
 
+
+
     # Clear button function
     def clearData():
         if len(inputWebsite.get()) == 0 and len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
@@ -432,22 +431,67 @@ def addNewPass():
     def addData():
         if len(inputWebsite.get()) == 0 and len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
             messagebox.showinfo("Empty fields", "All your fields are empty !", icon="error")
-        elif len(inputWebsite.get()) == 0 and len(inputPass.get()) == 0:
-            messagebox.showinfo("Empty fields", "You must fill Website and password fiels !", icon="warning")
+
+        elif len(inputWebsite.get()) == 0 or len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "You must fill Website and Password fields !", icon="warning")
 
         else:
-            MsgBox = messagebox.askquestion ('Add new data','Are you sure you wanna create new record ?',icon = 'warning')
+            MsgBox = messagebox.askquestion('Add new data','Are you sure you wanna create new record ?', icon = 'warning')
+
             if MsgBox == 'yes':
 
-                # TODO: encrypt + insert
-            
+                websitesList = []
+                iteration = 0
+
+                try:
+
+                    co, cur = create_connection()
+
+                    # Check if the website account already exists
+                    cur.execute("SELECT website FROM passwords")
+                    rows = cur.fetchall()
+
+                    for row in rows:
+                        for cell in row:
+                            decryptedData = decrypt_data(cell ,encoded_pvKey)
+                            websitesList.append(decryptedData)
+
+                    for i in range(len(websitesList)):
+                        if inputWebsite.get() == websitesList[i]:
+                            iteration = iteration + 1
+                            break
+
+                    if iteration > 0:
+                        messagebox.showinfo("The website exists", "You already have an account for {} !".format(inputWebsite.get()), icon="warning")
+                    else: # if doesn't exist, record is added
+
+                        web = encrypt_data(inputWebsite.get(), encoded_pvKey)
+                        user = encrypt_data(inputUsername.get(), encoded_pvKey)
+                        email = encrypt_data(inputEmail.get(), encoded_pvKey)
+                        passw = encrypt_data(inputPass.get(), encoded_pvKey)
+
+                        cur.execute(""" INSERT INTO passwords(website, username, email, password) VALUES (?,?,?,?) """, (web, user, email, passw))
+                        messagebox.showinfo("Success", "Your record was successfully added to the database.", icon="info")
+
+                    close_connection(co)
+
+                    # clear all inputs
+                    inputWebsite.delete(0, 'end')
+                    inputUsername.delete(0, 'end')
+                    inputEmail.delete(0, 'end')
+                    inputPass.delete(0, 'end')
+
+                except Exception as e:
+                    messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+                    co.rollback()
+                    close_connection(co)
 
 
-    btnAdd = Button(frameBtns, text="Add new",font=("Verdana", 12), bg='#30336b', fg='white')
+
+
+
+    btnAdd = Button(frameBtns, text="Add new",font=("Verdana", 12), bg='#30336b', fg='white', command=addData)
     btnAdd.pack(side=RIGHT, padx=(2,0))
-
-
-
 
 
     window_create.mainloop()
@@ -470,6 +514,11 @@ def backButtonRead():
     home_window()
 
 
+def backButtonAdd():
+
+    window_create.destroy()
+    home_window()
 
 
-addNewPass()
+# addNewPass()
+login_window()

@@ -22,18 +22,10 @@ Bonuses :
 
 69_G0FUCKY0URS3LF_70
 
+JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=
 
 
-OPEN FILE :
-
-filename = askopenfilename(title="Ouvrir votre document",filetypes=[('txt files','.txt'),('all files','.*')])
-fichier = open(filename, "r")
-content = fichier.read()
-fichier.close()
-
-Label(fenetre, text=content).pack(padx=10, pady=10)
-
-
+123test_123 (website taht allows the script to check if the private key is the right one to add data)
 
 
 

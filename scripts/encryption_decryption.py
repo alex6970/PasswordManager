@@ -21,6 +21,15 @@ def decrypt_data(encrypted_data, key):
 
     return data
 
+def check_key(key):
+
+    try:
+        f = Fernet(key)
+        decrypted = f.decrypt(b"gAAAAABh8H_hQAXA7goWF2zaMqSIrDRYZxUpIRo0_4nkMpLIxPHULc6Vmsaxi_hGF3wTN6SQ2TiA_d2oQF4YGVPzQKt8lvGNkg==")
+        return True
+    except:
+        return False
+
 # encrypt_data("lol",b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=')
 # == gAAAAABh6ciGxnz86WgFdKgWsb3EdzVr1abwUn17cXuLC2F-8Yd5T9Qxazlxh5WFItAgsO4_gMQtYSSsPMzbX1leczYiahm4Ow==
 
