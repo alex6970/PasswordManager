@@ -54,9 +54,7 @@ def create_pw_table():
     password TEXT
     )""")
 
-    # cursor.execute(""" INSERT INTO passwords(website,username,email,password) VALUES ('Facebook', 'admin', 'admin@gmail.com', 'admin123') """)
-
     close_connection(conn)
 
-
-create_pw_table()
+ # Create the database when used for the first time
+# create_pw_table()

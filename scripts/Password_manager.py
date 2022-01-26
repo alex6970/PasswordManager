@@ -297,11 +297,11 @@ def readPassLibrary():
         cur.execute(""" SELECT website, username, email, password FROM passwords """)
         fetch = cur.fetchall()
 
-        close_connection(co)
+
     except Exception as e:
 
         messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
-        co.rollback()
+        close_connection(co)
 
     dataBox.tag_configure('oddrow', background='white')
     dataBox.tag_configure('evenrow', background='lightblue')
@@ -310,11 +310,10 @@ def readPassLibrary():
     count = 0
 
     for record in fetch:
-
         if count % 2 == 0:
-            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('evenrow',))
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
         else:
-            dataBox.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('oddrow',))
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('oddrow',))
 
         count = count + 1
 
