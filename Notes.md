@@ -12,6 +12,12 @@
 - [ ] Modifier des mdp
 - [ ] Supprimer des comptes
 
+#### To implement later :
+
+- Window changes with buttons (get back, destroy windows when needed, etc)
+- store the hashed password inside db to co compare when logging?
+
+
 
 ### Bonuses :
 - clip to clipboard
@@ -21,7 +27,7 @@
 - Open private key from txt file (cf below)
 - Filter for Treeview  
 
--> Other data : 
+-> Other data :
 
 69_G0FUCKY0URS3LF_70  [TO REMOVE AT THE END]
 

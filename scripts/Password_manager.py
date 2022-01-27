@@ -36,7 +36,7 @@ def login_window():
     title = Label(window, text="Welcome to your password manager.",font=("Verdana", 12), height=2)
 
     identifier = StringVar()
-    id_label = Label(window, text="Identifier", height=2)
+    id_label = Label(window, text="Username", height=2)
     id = Entry(window, textvariable = identifier)
 
     password = StringVar()
@@ -224,6 +224,9 @@ def home_window():
 
 
     window_home.mainloop()
+
+
+
 
 
 
@@ -498,6 +501,144 @@ def addNewPass():
 
 
 
+# --------------------------------------------UPDATE---------------------------------------------------
+def updatePass():
+
+    global window_update
+
+    encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='
+
+    window_update = Tk()
+    window_update.title('Update an account')
+    #center window
+    windowWidth = 700
+    windowHeight = 600
+    positionRight = int(window_update.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window_update.winfo_screenheight()/2.3 - windowHeight/2)
+    window_update.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    window_update.resizable(width=FALSE, height=FALSE)
+    window_update['bg']='#130f40'
+
+
+    frame = Frame(window_update, bg='#130f40') #bg='white' to undeerstand better the placement
+    frame.pack(side=TOP, padx=(20,180))
+
+    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonUpdate)
+    btnBack.pack(side=LEFT,padx=(0, 100), pady=(20,))
+
+    title = Label(frame, text="Select a record to update it.",font=("Verdana", 14), height=2, bg='#130f40', fg='white')
+    title.pack(side=RIGHT, padx=(20,5), pady=(20,))
+
+
+
+    treeview_frame = Frame(window_update, borderwidth=3, bg='white')
+    treeview_frame.pack()
+
+    tree_scroll = Scrollbar(treeview_frame)
+    tree_scroll.pack(side=RIGHT, fill=Y)
+
+    # Treeview (box) settings
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure('Treeview', rowheight=25)
+    style.map('Treeview', background=[('selected', '#130f40')])
+
+    dataBox = ttk.Treeview(treeview_frame, yscrollcommand=tree_scroll.set, selectmode='extended', show='headings', columns=['Website', 'Username', 'Email', 'Password'])
+    dataBox.pack()
+
+    tree_scroll.config(command=dataBox.yview)
+
+    dataBox.column('Website', anchor=W, width=140)
+    dataBox.column('Username', anchor=CENTER, width=140)
+    dataBox.column('Email', anchor=CENTER, width=140)
+    dataBox.column('Password', anchor=CENTER, width=140)
+
+    dataBox.heading('Website', text="Website", anchor=CENTER)
+    dataBox.heading('Username', text="Username", anchor=CENTER)
+    dataBox.heading('Email', text="Email", anchor=CENTER)
+    dataBox.heading('Password', text="Password", anchor=CENTER)
+
+    # Access database to fecth all data
+    try:
+        co, cur = create_connection()
+
+        cur.execute(""" SELECT website, username, email, password FROM passwords """)
+        fetch = cur.fetchall()
+
+
+    except Exception as e:
+
+        messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+        close_connection(co)
+
+    dataBox.tag_configure('oddrow', background='white')
+    dataBox.tag_configure('evenrow', background='lightblue')
+
+    # insert data inside treeview
+    count = 0
+
+    for record in fetch:
+        if count % 2 == 0:
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
+        else:
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('oddrow',))
+
+        count = count + 1
+
+
+    labelFrame = LabelFrame(window_update, text="New password form", bg='#130f40',fg='white', font=('Verdana', 8))
+    labelFrame.pack(side=TOP, padx=60, pady=(20,))
+
+    frameRow1 = Frame(labelFrame, bg='#130f40')
+    frameRow1.pack(pady=(5, 10))
+
+    frameRow2 = Frame(labelFrame, bg='#130f40')
+    frameRow2.pack(pady=(0,10))
+
+    # #INPUTS
+    updWebsiteVar = StringVar()
+    updUsernameVar = StringVar()
+    updEmailVar = StringVar()
+    updPassVar = StringVar()
+
+    #ROW 1
+    labelWebsite = Label(frameRow1, text="Website :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelWebsite.pack(side=LEFT,pady=5, padx=(5,0))
+    updInputWebsite = Entry(frameRow1, textvariable = updWebsiteVar, width=35)
+    updInputWebsite.pack(side = RIGHT, pady=5, padx=(0,40))
+
+    labelEmail = Label(frameRow1, text="Email :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelEmail.pack(side=RIGHT,pady=5, padx=(20,0))
+    inputEmail = Entry(frameRow1, textvariable = updEmailVar, width=35)
+    inputEmail.pack(side = RIGHT, pady=5, padx=(10,))
+
+    #ROW 2
+    labelUsername = Label(frameRow2, text="Username :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelUsername.pack(side=LEFT,pady=(0,5), padx=(5,0))
+    inputUsername = Entry(frameRow2, textvariable = updUsernameVar, width=35)
+    inputUsername.pack(side = RIGHT, pady=(0,5), padx=(8,))
+
+    labelPass = Label(frameRow2, text="Password :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelPass.pack(side=RIGHT,pady=(0,5), padx=(5,0))
+    inputPass = Entry(frameRow2, textvariable = updPassVar, width=35)
+    inputPass.pack(side = RIGHT, pady=5, padx=(10,))
+
+    #Buttons buttons
+    frameBtn = Frame(window_update, bg='#130f40')
+    frameBtn.pack(side = TOP, pady=(10,10))
+
+
+    btnUpdate = Button(frameBtn, text="  Clear  ",font=("Verdana", 12), bg='#30336b', fg='white')
+    btnUpdate.pack(side=LEFT, padx=(0, 210))
+
+    btnClear = Button(frameBtn, text="   Add   ",font=("Verdana", 12), bg='#30336b', fg='white')
+    btnClear.pack(side=RIGHT, padx=(210, 0))
+
+
+
+    window_update.mainloop()
+
+    ## TODO: DISPLAY Treeview --- Select data from treeview --- fill textboses with selected data --- change and update
 
 
 
@@ -505,7 +646,14 @@ def addNewPass():
 
 
 
-# --------------------------------------------CHANGING-WINDOW------------------------------------------------
+
+
+
+# --------------------------------------------CHANGING-WINDOWS------------------------------------------------
+def backButtonUpdate():
+
+    window_update.destroy()
+    home_window()
 
 def backButtonRead():
 
@@ -519,5 +667,5 @@ def backButtonAdd():
     home_window()
 
 
-# addNewPass()
-login_window()
+updatePass()
+# login_window()
