@@ -215,7 +215,7 @@ def home_window():
     btnCreate = Button(frame2, text="Add new password",font=("Verdana", 12), height=2, width = 30, bg='#30336b', fg='white', command=addNewPass)
     btnCreate.pack(pady=5)
 
-    btnUpdate = Button(frame2, text="Update password/account info",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white')
+    btnUpdate = Button(frame2, text="Update password/account info",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white', command=updatePass)
     btnUpdate.pack(pady=5)
 
     btnDelete = Button(frame2, text="Delete account/passwords",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white')
@@ -241,6 +241,8 @@ def home_window():
 # --------------------------------------------READ------------------------------------------------
 
 def readPassLibrary():
+
+    window_home.destroy()
 
     global window_read
 
@@ -336,6 +338,8 @@ def readPassLibrary():
 # --------------------------------------------CREATE---------------------------------------------------
 
 def addNewPass():
+
+    window_home.destroy()
 
     global window_create
 
@@ -504,9 +508,12 @@ def addNewPass():
 # --------------------------------------------UPDATE---------------------------------------------------
 def updatePass():
 
+    window_home.destroy()
+     # to uncoment once update phase is done
+
     global window_update
 
-    encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='
+    encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
 
     window_update = Tk()
     window_update.title('Update an account')
@@ -586,8 +593,10 @@ def updatePass():
         count = count + 1
 
 
+
+    # FORM FRONTEND
     labelFrame = LabelFrame(window_update, text="New password form", bg='#130f40',fg='white', font=('Verdana', 8))
-    labelFrame.pack(side=TOP, padx=60, pady=(20,))
+    labelFrame.pack(side=TOP, pady=(20,))
 
     frameRow1 = Frame(labelFrame, bg='#130f40')
     frameRow1.pack(pady=(5, 10))
@@ -603,25 +612,93 @@ def updatePass():
 
     #ROW 1
     labelWebsite = Label(frameRow1, text="Website :", font=("Verdana", 11), bg='#130f40', fg='white')
-    labelWebsite.pack(side=LEFT,pady=5, padx=(5,0))
-    updInputWebsite = Entry(frameRow1, textvariable = updWebsiteVar, width=35)
-    updInputWebsite.pack(side = RIGHT, pady=5, padx=(0,40))
+    labelWebsite.pack(side=LEFT,pady=5, padx=(0,20))
+    updInputWebsite = Entry(frameRow1, textvariable = updWebsiteVar, width=25)
+    updInputWebsite.pack(side = LEFT, pady=5, padx=(0,40))
 
-    labelEmail = Label(frameRow1, text="Email :", font=("Verdana", 11), bg='#130f40', fg='white')
-    labelEmail.pack(side=RIGHT,pady=5, padx=(20,0))
-    inputEmail = Entry(frameRow1, textvariable = updEmailVar, width=35)
+    inputEmail = Entry(frameRow1, textvariable = updEmailVar, width=25)
     inputEmail.pack(side = RIGHT, pady=5, padx=(10,))
+    labelEmail = Label(frameRow1, text="Email :", font=("Verdana", 11), bg='#130f40', fg='white')
+    labelEmail.pack(side=RIGHT,pady=5)
+
 
     #ROW 2
     labelUsername = Label(frameRow2, text="Username :", font=("Verdana", 11), bg='#130f40', fg='white')
     labelUsername.pack(side=LEFT,pady=(0,5), padx=(5,0))
-    inputUsername = Entry(frameRow2, textvariable = updUsernameVar, width=35)
-    inputUsername.pack(side = RIGHT, pady=(0,5), padx=(8,))
+    inputUsername = Entry(frameRow2, textvariable = updUsernameVar, width=25)
+    inputUsername.pack(side = LEFT, pady=(0,5), padx=(8,))
 
+    inputPass = Entry(frameRow2, textvariable = updPassVar, width=25)
+    inputPass.pack(side = RIGHT, pady=5, padx=(10,))
     labelPass = Label(frameRow2, text="Password :", font=("Verdana", 11), bg='#130f40', fg='white')
     labelPass.pack(side=RIGHT,pady=(0,5), padx=(5,0))
-    inputPass = Entry(frameRow2, textvariable = updPassVar, width=35)
-    inputPass.pack(side = RIGHT, pady=5, padx=(10,))
+
+
+
+    def onSelection(e):
+        # clear input data just in case
+        updInputWebsite.delete(0, 'end')
+        inputUsername.delete(0, 'end')
+        inputEmail.delete(0, 'end')
+        inputPass.delete(0, 'end')
+
+        values = dataBox.item(dataBox.focus(), 'values')
+
+        # insert selected record values
+        updInputWebsite.insert(0, values[0])
+        inputUsername.insert(0, values[1])
+        inputEmail.insert(0, values[2])
+        inputPass.insert(0, values[3])
+
+    dataBox.bind("<ButtonRelease-1>", onSelection)
+
+    def updateData():
+
+        values = dataBox.item(dataBox.focus(), 'values')
+
+        if len(updInputWebsite.get()) == 0 and len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "All your fields are empty !", icon="error")
+
+        elif len(updInputWebsite.get()) == 0 or len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "You must fill Website and Password fields !", icon="warning")
+
+        else:
+            MsgBox = messagebox.askquestion('Updating a record','Are you sure you wanna modify this record ?', icon = 'warning')
+
+            if MsgBox == 'yes':
+
+                websitesList = []
+                iteration = 0
+
+                try:
+
+                    co, cur = create_connection()
+
+                    web = encrypt_data(updInputWebsite.get(), encoded_pvKey)
+                    user = encrypt_data(inputUsername.get(), encoded_pvKey)
+                    email = encrypt_data(inputEmail.get(), encoded_pvKey)
+                    passw = encrypt_data(inputPass.get(), encoded_pvKey)
+                    print(web, user, email, passw, encrypt_data(values[0], encoded_pvKey)) ## PB HERE BECAUSE WHEN WE ENCRYPT THE VALUE CHANGES ALL THE TIME != STORED ENCRYPTED WEBSITE
+
+                    try:
+                        cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE website=? """, (web, user, email, passw, encrypt_data(values[0], encoded_pvKey)))
+                        messagebox.showinfo("Success", "Your record was successfully updated.", icon="info")
+                    except Exception as e:
+                        messagebox.showinfo("Something went wrong.", "Your record was not updated. Error is : {}".format(e), icon="error")
+
+                    # clear all inputs
+                    updInputWebsite.delete(0, 'end')
+                    inputUsername.delete(0, 'end')
+                    inputEmail.delete(0, 'end')
+                    inputPass.delete(0, 'end')
+
+                except Exception as e:
+                    messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+                    co.rollback()
+
+                close_connection(co)
+
+
 
     #Buttons buttons
     frameBtn = Frame(window_update, bg='#130f40')
@@ -629,10 +706,13 @@ def updatePass():
 
 
     btnUpdate = Button(frameBtn, text="  Clear  ",font=("Verdana", 12), bg='#30336b', fg='white')
-    btnUpdate.pack(side=LEFT, padx=(0, 210))
+    btnUpdate.pack(side=LEFT, padx=(0, 170))
 
-    btnClear = Button(frameBtn, text="   Add   ",font=("Verdana", 12), bg='#30336b', fg='white')
-    btnClear.pack(side=RIGHT, padx=(210, 0))
+    btnClear = Button(frameBtn, text="  Update  ",font=("Verdana", 12), bg='#30336b', fg='white', command=updateData)
+    btnClear.pack(side=RIGHT, padx=(170, 0))
+
+
+
 
 
 
@@ -667,5 +747,5 @@ def backButtonAdd():
     home_window()
 
 
-updatePass()
-# login_window()
+# updatePass()
+login_window()

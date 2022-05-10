@@ -30,6 +30,8 @@ def check_key(key):
     except:
         return False
 
+print(encrypt_data("Snapchat", b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='))
+
 # encrypt_data("lol",b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=')
 # == gAAAAABh6ciGxnz86WgFdKgWsb3EdzVr1abwUn17cXuLC2F-8Yd5T9Qxazlxh5WFItAgsO4_gMQtYSSsPMzbX1leczYiahm4Ow==
 
