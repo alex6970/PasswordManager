@@ -8,8 +8,8 @@
 ## **Fonctions de l'app** :
 - [x] Se connecter avec un mdp
 - [x] Fenetre d'ffichage de l'username, email et mdp et du site
-- [ ] Ajouter des mdp
-- [ ] Modifier des mdp
+- [x] Ajouter des mdp
+- [x] Modifier des mdp
 - [ ] Supprimer des comptes
 
 #### To implement later :
@@ -28,7 +28,10 @@
 - Filter for Treeview  
 - Avoid SQL injections
 
+
 -> Other data :
+
+mettre le pj fini en public
 
 69_G0FUCKY0URS3LF_70  [TO REMOVE AT THE END]
 
