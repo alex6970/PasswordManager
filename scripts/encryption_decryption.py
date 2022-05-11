@@ -22,7 +22,7 @@ def decrypt_data(encrypted_data, key):
     return data
 
 def check_key(key):
-
+    ''' Ensure that the login private key is the right one'''
     try:
         f = Fernet(key)
         decrypted = f.decrypt(b"gAAAAABh8H_hQAXA7goWF2zaMqSIrDRYZxUpIRo0_4nkMpLIxPHULc6Vmsaxi_hGF3wTN6SQ2TiA_d2oQF4YGVPzQKt8lvGNkg==")
@@ -30,41 +30,4 @@ def check_key(key):
     except:
         return False
 
-# encrypt_data("lol",b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=')
-# == gAAAAABh6ciGxnz86WgFdKgWsb3EdzVr1abwUn17cXuLC2F-8Yd5T9Qxazlxh5WFItAgsO4_gMQtYSSsPMzbX1leczYiahm4Ow==
-
-# decrypt_data("gAAAAABh6ciGxnz86WgFdKgWsb3EdzVr1abwUn17cXuLC2F-8Yd5T9Qxazlxh5WFItAgsO4_gMQtYSSsPMzbX1leczYiahm4Ow==",b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=')
-# == lol
-    # f = Fernet(key)
-    # f.
-    # return
-
-# key = Fernet.generate_key()
-# print(key) # = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='
-#
-# f = Fernet(key)
-#
-# textToEncrypt = f.encrypt(b"Hello world !") #b = to bytes
-# print(textToEncrypt)
-#
-# textDecrypted = f.decrypt(textToEncrypt)
-# print(textDecrypted.decode())
-#
-# salt = os.urandom(16)
-# print(salt)
-
-
-
-
-
-# def hash_pass():
-#
-#     pw = b'69_G0FUCKY0URS3LF_70'
-#     salt = bcrypt.gensalt()
-#     pw_hashed = bcrypt.hashpw(pw, salt)
-#
-#     print(salt)
-#     print(pw_hashed)
-#     print(pw_hashed.decode())
-#
-# hash_pass()
+print(encrypt_data("Snapchat", b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='))

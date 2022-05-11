@@ -26,6 +26,7 @@
 - improve optimisation (windows repeating etc)
 - Open private key from txt file (cf below)
 - Filter for Treeview  
+- Avoid SQL injections
 
 -> Other data :
 
@@ -34,3 +35,7 @@
 JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=   [TO REMOVE AT THE END]
 
 123test_123 (website taht allows the script to check if the private key is the right one to add data)
+
+
+References :  
+https://www.youtube.com/watch?v=lKiNlSs_cms&list=PLY0jbCZu_BixqvT2A-OnMvHNmYo6bJP02&index=4&ab_channel=Codemy.com
