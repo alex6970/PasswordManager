@@ -451,33 +451,16 @@ def addNewPass():
 
                 try:
 
+
                     co, cur = create_connection()
 
-                    # Check if the website account already exists
-                    cur.execute("SELECT website FROM passwords")
-                    rows = cur.fetchall()
+                    web = encrypt_data(inputWebsite.get(), encoded_pvKey)
+                    user = encrypt_data(inputUsername.get(), encoded_pvKey)
+                    email = encrypt_data(inputEmail.get(), encoded_pvKey)
+                    passw = encrypt_data(inputPass.get(), encoded_pvKey)
 
-                    for row in rows:
-                        for cell in row:
-                            decryptedData = decrypt_data(cell ,encoded_pvKey)
-                            websitesList.append(decryptedData)
-
-                    for i in range(len(websitesList)):
-                        if inputWebsite.get() == websitesList[i]:
-                            iteration = iteration + 1
-                            break
-
-                    if iteration > 0:
-                        messagebox.showinfo("The website exists", "You already have an account for {} !".format(inputWebsite.get()), icon="warning")
-                    else: # if doesn't exist, record is added
-
-                        web = encrypt_data(inputWebsite.get(), encoded_pvKey)
-                        user = encrypt_data(inputUsername.get(), encoded_pvKey)
-                        email = encrypt_data(inputEmail.get(), encoded_pvKey)
-                        passw = encrypt_data(inputPass.get(), encoded_pvKey)
-
-                        cur.execute(""" INSERT INTO passwords(website, username, email, password) VALUES (?,?,?,?) """, (web, user, email, passw))
-                        messagebox.showinfo("Success", "Your record was successfully added to the database.", icon="info")
+                    cur.execute(""" INSERT INTO passwords(website, username, email, password) VALUES (?,?,?,?) """, (web, user, email, passw))
+                    messagebox.showinfo("Success", "Your record was successfully added to the database.", icon="info")
 
                     close_connection(co)
 
@@ -636,6 +619,9 @@ def updatePass():
 
 
     def onSelection(e):
+        #website input cannot be changed
+        updInputWebsite.config(state= "normal")
+
         # clear input data just in case
         updInputWebsite.delete(0, 'end')
         inputUsername.delete(0, 'end')
@@ -650,17 +636,11 @@ def updatePass():
         inputEmail.insert(0, values[2])
         inputPass.insert(0, values[3])
 
+        updInputWebsite.config(state= "readonly")
+
     dataBox.bind("<ButtonRelease-1>", onSelection)
 
 
-
-
-    def decryptWebsiteSQL(input):
-        f = Fernet(encoded_pvKey)
-        encrypted_data = input.encode()
-        data_encoded = f.decrypt(encrypted_data)
-        data = data_encoded.decode()
-        return data
 
 
 
@@ -679,101 +659,46 @@ def updatePass():
 
             if MsgBox == 'yes':
 
-                websitesList = []
-                iteration = 0
-
                 web = encrypt_data(updInputWebsite.get(), encoded_pvKey)
                 user = encrypt_data(inputUsername.get(), encoded_pvKey)
                 email = encrypt_data(inputEmail.get(), encoded_pvKey)
                 passw = encrypt_data(inputPass.get(), encoded_pvKey)
-                print(web, user, email, passw, encrypt_data(values[0], encoded_pvKey)) ## PB HERE BECAUSE WHEN WE ENCRYPT THE VALUE CHANGES ALL THE TIME != STORED ENCRYPTED WEBSITE
-
 
                 try:
 
                     co, cur = create_connection()
 
-                    cur.execute(""" SELECT website FROM passwords """)
+                    cur.execute(""" SELECT user_id, website FROM passwords """)
                     records = cur.fetchall()
 
-                    count = 0
+                    websiteId = None
 
+                    # recover the id of the website that is about to be updated
                     for record in records:
-                            decrypted_website = decrypt_data(record[0] ,encoded_pvKey)
-                            websitesList.append(decrypted_website)
+                            decrypted_website = decrypt_data(record[1] ,encoded_pvKey)
+                            print(decrypted_website)
+                            if decrypted_website == updInputWebsite.get():
+                                websiteId = record[0]
 
+                    close_connection(co)
 
+                    # create a new connection to the db to update (avoid errors of 2 queries on same cur)
+                    co1, cur1 = create_connection()
 
-                    for i in range(len(websitesList)):
-                        if  websitesList[i] == updInputWebsite.get() :
+                    cur1.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE user_id=? """, (web, user, email, passw, websiteId))
+                    messagebox.showinfo("Success", "Your record was successfully added to the database.", icon="info")
 
+                    close_connection(co1)
 
-                                #=> sqliteConnection.create_function("TOTILECASE", 1, _toTitleCase) essayer d'appliquer la fonction de décryptage au website directement dans la requete (sinon faire en récupérant le num de l'itération du tableau de websites et dans la db update à cette itération)
-                            print('Enters loop')
-                            cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE decryptWebsiteSQL(website)=? """, (web, user, email, passw, websitesList[i])) # tjs meme pb, hasher plutot que ecrypter le site ?
-                            print(websitesList[i])
+                    #back to homepage to refresh data
+                    backButtonUpdate()
 
-
-
-
-
-                        # websitesList.append(decrypt_data(record[0], encoded_pvKey))
-                        #
-                        # dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
-                        #
-                        # count = count + 1
-
-
-                    # for row in rows:
-                    #     for cell in row:
-                    #         decryptedData = decrypt_data(cell ,encoded_pvKey)
-                    #         websitesList.append(decryptedData)
-                    #
-                    # for i in range(len(websitesList)):
-                    #     if inputWebsite.get() == websitesList[i]:
-                    #         iteration = iteration + 1
-                    #         break
-
-
-
-
-                    #
-                    #
-
-                    # try:
-                    #
-                    #     cur.execute(""" SELECT website, username, email, password FROM passwords WHERE website=? """, ())
-                    #     records = cur.fetchall()
-                    #
-                    #     count = 0
-                    #
-                    #     for record in records:
-                    #         if count % 2 == 0:
-                    #             dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
-                    #         else:
-                    #             dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('oddrow',))
-                    #
-                    #         count = count + 1
-                    #
-                    #
-                    #     cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE website=? """, (web, user, email, passw, encrypt_data(values[0], encoded_pvKey)))
-                    #     messagebox.showinfo("Success", "Your record was successfully updated.", icon="info")
-                    #
-                    #
-                    # except Exception as e:
-                    #     messagebox.showinfo("Something went wrong.", "Your record was not updated. Error is : {}".format(e), icon="error")
-                    #
-                    # # clear all inputs
-                    # updInputWebsite.delete(0, 'end')
-                    # inputUsername.delete(0, 'end')
-                    # inputEmail.delete(0, 'end')
-                    # inputPass.delete(0, 'end')
 
                 except Exception as e:
-                    messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+                    messagebox.showinfo("Something went wrong in the updated.", "Error is : {}".format(e), icon="error")
                     co.rollback()
 
-                close_connection(co)
+
 
 
 
