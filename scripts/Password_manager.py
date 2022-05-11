@@ -652,6 +652,18 @@ def updatePass():
 
     dataBox.bind("<ButtonRelease-1>", onSelection)
 
+
+
+
+    def decryptWebsiteSQL(input):
+        f = Fernet(encoded_pvKey)
+        encrypted_data = input.encode()
+        data_encoded = f.decrypt(encrypted_data)
+        data = data_encoded.decode()
+        return data
+
+
+
     def updateData():
 
         values = dataBox.item(dataBox.focus(), 'values')
@@ -670,27 +682,92 @@ def updatePass():
                 websitesList = []
                 iteration = 0
 
+                web = encrypt_data(updInputWebsite.get(), encoded_pvKey)
+                user = encrypt_data(inputUsername.get(), encoded_pvKey)
+                email = encrypt_data(inputEmail.get(), encoded_pvKey)
+                passw = encrypt_data(inputPass.get(), encoded_pvKey)
+                print(web, user, email, passw, encrypt_data(values[0], encoded_pvKey)) ## PB HERE BECAUSE WHEN WE ENCRYPT THE VALUE CHANGES ALL THE TIME != STORED ENCRYPTED WEBSITE
+
+
                 try:
 
                     co, cur = create_connection()
 
-                    web = encrypt_data(updInputWebsite.get(), encoded_pvKey)
-                    user = encrypt_data(inputUsername.get(), encoded_pvKey)
-                    email = encrypt_data(inputEmail.get(), encoded_pvKey)
-                    passw = encrypt_data(inputPass.get(), encoded_pvKey)
-                    print(web, user, email, passw, encrypt_data(values[0], encoded_pvKey)) ## PB HERE BECAUSE WHEN WE ENCRYPT THE VALUE CHANGES ALL THE TIME != STORED ENCRYPTED WEBSITE
+                    cur.execute(""" SELECT website FROM passwords """)
+                    records = cur.fetchall()
 
-                    try:
-                        cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE website=? """, (web, user, email, passw, encrypt_data(values[0], encoded_pvKey)))
-                        messagebox.showinfo("Success", "Your record was successfully updated.", icon="info")
-                    except Exception as e:
-                        messagebox.showinfo("Something went wrong.", "Your record was not updated. Error is : {}".format(e), icon="error")
+                    count = 0
 
-                    # clear all inputs
-                    updInputWebsite.delete(0, 'end')
-                    inputUsername.delete(0, 'end')
-                    inputEmail.delete(0, 'end')
-                    inputPass.delete(0, 'end')
+                    for record in records:
+                            decrypted_website = decrypt_data(record[0] ,encoded_pvKey)
+                            websitesList.append(decrypted_website)
+
+
+
+                    for i in range(len(websitesList)):
+                        if  websitesList[i] == updInputWebsite.get() :
+
+
+                                #=> sqliteConnection.create_function("TOTILECASE", 1, _toTitleCase) essayer d'appliquer la fonction de décryptage au website directement dans la requete (sinon faire en récupérant le num de l'itération du tableau de websites et dans la db update à cette itération)
+                            print('Enters loop')
+                            cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE decryptWebsiteSQL(website)=? """, (web, user, email, passw, websitesList[i])) # tjs meme pb, hasher plutot que ecrypter le site ?
+                            print(websitesList[i])
+
+
+
+
+
+                        # websitesList.append(decrypt_data(record[0], encoded_pvKey))
+                        #
+                        # dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
+                        #
+                        # count = count + 1
+
+
+                    # for row in rows:
+                    #     for cell in row:
+                    #         decryptedData = decrypt_data(cell ,encoded_pvKey)
+                    #         websitesList.append(decryptedData)
+                    #
+                    # for i in range(len(websitesList)):
+                    #     if inputWebsite.get() == websitesList[i]:
+                    #         iteration = iteration + 1
+                    #         break
+
+
+
+
+                    #
+                    #
+
+                    # try:
+                    #
+                    #     cur.execute(""" SELECT website, username, email, password FROM passwords WHERE website=? """, ())
+                    #     records = cur.fetchall()
+                    #
+                    #     count = 0
+                    #
+                    #     for record in records:
+                    #         if count % 2 == 0:
+                    #             dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
+                    #         else:
+                    #             dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('oddrow',))
+                    #
+                    #         count = count + 1
+                    #
+                    #
+                    #     cur.execute(""" UPDATE passwords SET website=?, username=?, email=?, password=? WHERE website=? """, (web, user, email, passw, encrypt_data(values[0], encoded_pvKey)))
+                    #     messagebox.showinfo("Success", "Your record was successfully updated.", icon="info")
+                    #
+                    #
+                    # except Exception as e:
+                    #     messagebox.showinfo("Something went wrong.", "Your record was not updated. Error is : {}".format(e), icon="error")
+                    #
+                    # # clear all inputs
+                    # updInputWebsite.delete(0, 'end')
+                    # inputUsername.delete(0, 'end')
+                    # inputEmail.delete(0, 'end')
+                    # inputPass.delete(0, 'end')
 
                 except Exception as e:
                     messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
@@ -705,11 +782,11 @@ def updatePass():
     frameBtn.pack(side = TOP, pady=(10,10))
 
 
-    btnUpdate = Button(frameBtn, text="  Clear  ",font=("Verdana", 12), bg='#30336b', fg='white')
-    btnUpdate.pack(side=LEFT, padx=(0, 170))
+    btnClear = Button(frameBtn, text="  Clear  ",font=("Verdana", 12), bg='#30336b', fg='white')
+    btnClear.pack(side=LEFT, padx=(0, 170))
 
-    btnClear = Button(frameBtn, text="  Update  ",font=("Verdana", 12), bg='#30336b', fg='white', command=updateData)
-    btnClear.pack(side=RIGHT, padx=(170, 0))
+    btnUpdate = Button(frameBtn, text="  Update  ",font=("Verdana", 12), bg='#30336b', fg='white', command=updateData)
+    btnUpdate.pack(side=RIGHT, padx=(170, 0))
 
 
 
