@@ -496,7 +496,7 @@ def updatePass():
 
     global window_update
 
-    encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
+    # encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
 
     window_update = Tk()
     window_update.title('Update an account')
