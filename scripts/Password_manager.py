@@ -676,7 +676,6 @@ def updatePass():
                     # recover the id of the website that is about to be updated
                     for record in records:
                             decrypted_website = decrypt_data(record[1] ,encoded_pvKey)
-                            print(decrypted_website)
                             if decrypted_website == updInputWebsite.get():
                                 websiteId = record[0]
 
@@ -699,6 +698,47 @@ def updatePass():
                     co.rollback()
 
 
+    # Code for the reset button
+    def resetDataUpdt():
+        if len(inputUsername.get()) == 0 and len(inputEmail.get()) == 0 and len(inputPass.get()) == 0:
+            messagebox.showinfo("Empty fields", "All your fields are empty !", icon="error")
+        else:
+            MsgBox = messagebox.askquestion ('Reset entries','Do you really want to reset your new entries ?',icon = 'warning')
+            if MsgBox == 'yes':
+
+                try:
+
+                    co, cur = create_connection()
+
+                    cur.execute(""" SELECT username, email, password, website FROM passwords """)
+                    records = cur.fetchall()
+
+                    decrypted_username = None
+                    decrypted_email = None
+                    decrypted_password = None
+
+                    for record in records:
+                        if decrypt_data(record[3] ,encoded_pvKey) == updInputWebsite.get():
+                            decrypted_username = decrypt_data(record[0], encoded_pvKey)
+                            decrypted_email = decrypt_data(record[1], encoded_pvKey)
+                            decrypted_password = decrypt_data(record[2], encoded_pvKey)
+
+
+                    updInputWebsite.delete(0, 'end')
+                    inputUsername.delete(0, 'end')
+                    inputEmail.delete(0, 'end')
+                    inputPass.delete(0, 'end')
+
+                    inputUsername.insert(0, decrypted_username)
+                    inputEmail.insert(0, decrypted_email)
+                    inputPass.insert(0, decrypted_password)
+
+                except Exception as e:
+                    messagebox.showinfo("Something went wrong in the updated.", "Error is : {}".format(e), icon="error")
+                    co.rollback()
+
+# TODO: reset data
+
 
 
 
@@ -707,7 +747,7 @@ def updatePass():
     frameBtn.pack(side = TOP, pady=(10,10))
 
 
-    btnClear = Button(frameBtn, text="  Clear  ",font=("Verdana", 12), bg='#30336b', fg='white')
+    btnClear = Button(frameBtn, text="  Reset  ",font=("Verdana", 12), bg='#30336b', fg='white', command=resetDataUpdt)
     btnClear.pack(side=LEFT, padx=(0, 170))
 
     btnUpdate = Button(frameBtn, text="  Update  ",font=("Verdana", 12), bg='#30336b', fg='white', command=updateData)
@@ -720,7 +760,7 @@ def updatePass():
 
     window_update.mainloop()
 
-    ## TODO: DISPLAY Treeview --- Select data from treeview --- fill textboses with selected data --- change and update
+
 
 
 
