@@ -218,7 +218,7 @@ def home_window():
     btnUpdate = Button(frame2, text="Update password/account info",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white', command=updatePass)
     btnUpdate.pack(pady=5)
 
-    btnDelete = Button(frame2, text="Delete account/passwords",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white')
+    btnDelete = Button(frame2, text="Delete account/passwords",font=("Verdana", 12), height=2, width = 30,bg='#30336b', fg='white', command=deletePass)
     btnDelete.pack(pady=5)
 
 
@@ -733,11 +733,13 @@ def updatePass():
                     inputEmail.insert(0, decrypted_email)
                     inputPass.insert(0, decrypted_password)
 
+                    close_connection(co)
+
                 except Exception as e:
                     messagebox.showinfo("Something went wrong in the updated.", "Error is : {}".format(e), icon="error")
                     co.rollback()
 
-# TODO: reset data
+
 
 
 
@@ -758,7 +760,161 @@ def updatePass():
 
 
 
-    window_update.mainloop()
+
+
+
+
+
+
+
+# --------------------------------------------DELETE---------------------------------------------------
+
+def deletePass():
+
+    # encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
+
+    window_home.destroy()
+
+    global window_delete
+
+    window_delete = Tk()
+    window_delete.title('Delete')
+    #center window
+    windowWidth = 700
+    windowHeight = 450
+    positionRight = int(window_delete.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window_delete.winfo_screenheight()/2.3 - windowHeight/2)
+    window_delete.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    window_delete.resizable(width=FALSE, height=FALSE)
+    window_delete['bg']='#130f40'
+
+    frame = Frame(window_delete, bg='#130f40') #bg='white' to undeerstand better the placement
+    frame.pack(side=TOP, padx=(20,180))
+
+    btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonDelete)
+    btnBack.pack(side=LEFT,padx=(0, 100), pady=(20,))
+
+    title = Label(frame, text="Select an account.",font=("Verdana", 14), height=2, bg='#130f40', fg='white')
+    title.pack(side=RIGHT, padx=(20,5), pady=(20,))
+
+
+
+    treeview_frame = Frame(window_delete, borderwidth=3, bg='white')
+    treeview_frame.pack()
+
+    tree_scroll = Scrollbar(treeview_frame)
+    tree_scroll.pack(side=RIGHT, fill=Y)
+
+    # Treeview (box) settings
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure('Treeview', rowheight=25)
+    style.map('Treeview', background=[('selected', '#130f40')])
+
+    dataBox = ttk.Treeview(treeview_frame, yscrollcommand=tree_scroll.set, selectmode='extended', show='headings', columns=['Website', 'Username', 'Email', 'Password'])
+    dataBox.pack()
+
+    tree_scroll.config(command=dataBox.yview)
+
+    dataBox.column('Website', anchor=W, width=140)
+    dataBox.column('Username', anchor=CENTER, width=140)
+    dataBox.column('Email', anchor=CENTER, width=140)
+    dataBox.column('Password', anchor=CENTER, width=140)
+
+    dataBox.heading('Website', text="Website", anchor=CENTER)
+    dataBox.heading('Username', text="Username", anchor=CENTER)
+    dataBox.heading('Email', text="Email", anchor=CENTER)
+    dataBox.heading('Password', text="Password", anchor=CENTER)
+
+    # Access database to fecth all data
+    try:
+        co, cur = create_connection()
+
+        cur.execute(""" SELECT website, username, email, password FROM passwords """)
+        fetch = cur.fetchall()
+
+
+    except Exception as e:
+
+        messagebox.showinfo("Something went wrong.", "Error is : {}".format(e), icon="error")
+        close_connection(co)
+
+    dataBox.tag_configure('oddrow', background='white')
+    dataBox.tag_configure('evenrow', background='lightblue')
+
+    # insert data inside treeview
+    count = 0
+
+    for record in fetch:
+        if count % 2 == 0:
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('evenrow',))
+        else:
+            dataBox.insert(parent='', index='end', iid=count, text='', values=(decrypt_data(record[0], encoded_pvKey),decrypt_data(record[1], encoded_pvKey), decrypt_data(record[2], encoded_pvKey), decrypt_data(record[3], encoded_pvKey)), tags=('oddrow',))
+
+        count = count + 1
+
+
+
+
+
+
+
+    def deleteAccount():
+        values = dataBox.item(dataBox.focus(), 'values')
+
+        # in case the row is not selected
+        if len(values)== 0:
+            messagebox.showinfo("Something went wrong", "You must select a row to delete it !", icon="error")
+        else:
+            MsgBox = messagebox.askquestion ('Delete the selection','Do you really want to delete the selected account ?',icon = 'warning')
+
+            if MsgBox == 'yes':
+                try:
+
+                    co, cur = create_connection()
+
+                    cur.execute(""" SELECT user_id, website FROM passwords """)
+                    records = cur.fetchall()
+
+                    websiteId = None
+
+                    # recover the id of the website that is about to be deleted
+                    for record in records:
+                            decrypted_website = decrypt_data(record[1] ,encoded_pvKey)
+                            if decrypted_website == values[0]:
+                                websiteId = record[0]
+
+                    close_connection(co)
+
+                    # delete the record depending on the id
+                    co1, cur1 = create_connection()
+
+                    cur1.execute(""" DELETE FROM passwords WHERE user_id=? """, (websiteId,))
+                    messagebox.showinfo("Success", "Your record was successfully deleted.", icon="info")
+
+                    close_connection(co1)
+
+                    backButtonDelete()
+
+                except Exception as e:
+                    messagebox.showinfo("Something went wrong in the deleted.", "Error is : {}".format(e), icon="error")
+
+
+
+
+
+
+    #Buttons
+    frameBtn = Frame(window_delete, bg='#130f40')
+    frameBtn.pack(side = TOP, pady=(10,10))
+
+
+    btnDelete = Button(frameBtn, text="  Delete  ",font=("Verdana", 12), bg='#30336b', fg='white', command=deleteAccount)
+    btnDelete.pack()
+
+
+    window_delete.mainloop()
+
 
 
 
@@ -788,6 +944,11 @@ def backButtonAdd():
     window_create.destroy()
     home_window()
 
+def backButtonDelete():
 
-# updatePass()
+    window_delete.destroy()
+    home_window()
+
+
+# deletePass()
 login_window()

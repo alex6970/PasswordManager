@@ -29,5 +29,3 @@ def check_key(key):
         return True
     except:
         return False
-
-print(encrypt_data("Snapchat", b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU='))

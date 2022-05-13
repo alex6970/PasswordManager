@@ -10,11 +10,11 @@
 - [x] Fenetre d'ffichage de l'username, email et mdp et du site
 - [x] Ajouter des mdp
 - [x] Modifier des mdp
-- [ ] Supprimer des comptes
+- [x] Supprimer des comptes
 
 #### To implement later :
 
-- Window changes with buttons (get back, destroy windows when needed, etc)
+- [x] Window changes with buttons (get back, destroy windows when needed, etc)
 - store the hashed password inside db to co compare when logging?
 
 
