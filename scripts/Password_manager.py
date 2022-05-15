@@ -368,7 +368,7 @@ def addNewPass():
 
     window_create = windowDisp2('Create a new account with password', 550, 400, 2.3)
 
-    frame = Frame(window_create, bg='#130f40') #bg='white' to undeerstand better the placement
+    frame = Frame(window_create, bg='#130f40')
     frame.pack(side=TOP)
 
     btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonAdd)
@@ -513,7 +513,7 @@ def updatePass():
 
     window_update = windowDisp2('Update an account', 700, 600, 2.3)
 
-    frame = Frame(window_update, bg='#130f40') #bg='white' to undeerstand better the placement
+    frame = Frame(window_update, bg='#130f40')
     frame.pack(side=TOP, padx=(20,180))
 
     btnBack = Button(frame, text="Back",font=("Verdana", 12),bg='#30336b', fg='white', command=backButtonUpdate)
@@ -932,5 +932,6 @@ def backButtonDelete():
 
     window_delete.destroy()
     home_window()
+
 
 login_window()
