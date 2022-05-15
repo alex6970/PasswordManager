@@ -7,7 +7,6 @@
 
 
 ## About the project
----
 
 Project built to self familiarization with tkinter, sql queries, database access, hashing and encryption and ultimately building a python application. Completely offline.
 
@@ -18,7 +17,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Table of Contents
----
+
 - [Project Organization](#project-Organization)
 - [Features and uses](#features-and-uses)
 - [Technologies & packages](#technologies-&-packages)
@@ -30,7 +29,6 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Project Organization
----
 
     ├── database          
     │    └── pass.db                  <- Sqlite database file
@@ -53,7 +51,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Features and uses 💻
----
+
 - App GUI with python
 - Login with hashed password
 - Sqlite database records encrypted (symmetric)
@@ -68,7 +66,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Technologies & packages 🔧
----
+
 &rarr; Python,  used for the backend  
 &rarr; Sqlite, for the database  
 &rarr; Tkinter, for the frontend    
@@ -81,7 +79,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Screenshots 📷
----
+
 - #### Homepage  
 
 <div align="center">
@@ -98,7 +96,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 
 ## Credits 🤝
----
+
 - [Stack Overflow](https://stackoverflow.com/)
 - [Geeks For Geeks](www.geeksforgeeks.org)
 - [Tkinter Doc](https://docs.python.org/3/library/tkinter.html)
