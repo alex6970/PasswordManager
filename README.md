@@ -1,7 +1,7 @@
 [![alex6970 - PasswordManager](https://img.shields.io/static/v1?label=alex6970&message=PasswordManager&color=blueviolet&logo=github)](https://github.com/alex6970/PasswordManager "Go to GitHub repo")
 [![License](https://img.shields.io/badge/License-MIT-blueviolet)](#license)
-[![GitHub watchers](https://img.shields.io/github/watchers/alex6970/PasswordManager?style=social)]()
-
+[![GitHub commits](https://badgen.net/github/commits/alex6970/PasswordManager)]()  
+[![GitHub watchers](https://img.shields.io/github/watchers/alex6970/PasswordManager.svg?style=social&label=Watchers&maxAge=2592000)]()
 
 # 🔐 PasswordManager 🔐
 
