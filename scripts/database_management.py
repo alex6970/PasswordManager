@@ -32,29 +32,3 @@ def close_connection(co):
 
     except Exception as e:
         print(e)
-
-
-
-
-
-
-def create_pw_table():
-    """
-    Creates the Password Table if doesn't exist.
-    """
-
-
-    conn, cursor = create_connection()
-
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS passwords(
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    website TEXT,
-    username TEXT,
-    email TEXT,
-    password TEXT
-    )""")
-
-    close_connection(conn)
-
- # Create the database when used for the first time
-# create_pw_table()

@@ -22,7 +22,7 @@ def decrypt_data(encrypted_data, key):
     return data
 
 def check_key(key):
-    ''' Ensure that the login private key is the right one (not mandatory, just to tell user if it's the rigght key)'''
+    ''' Ensure that the login private key is the right one (not mandatory, just to tell user if it's the right key with an example)'''
     try:
         f = Fernet(key)
         decrypted = f.decrypt(b"gAAAAABh8H_hQAXA7goWF2zaMqSIrDRYZxUpIRo0_4nkMpLIxPHULc6Vmsaxi_hGF3wTN6SQ2TiA_d2oQF4YGVPzQKt8lvGNkg==")

@@ -15,22 +15,20 @@ s# **Steps** :
 #### To implement later :
 
 - [x] Window changes with buttons (get back, destroy windows when needed, etc)
-- [ ] store the hashed password inside db to co compare when logging?
-
-
 
 ### Bonuses :
 - Clip to clipboard
 - Lock script at the end (cf below)
 - Improve design
 - Improve optimisation (windows repeating etc)
-- Filter for Treeview/order by
 - Avoid SQL injections
 
 
 -> Other data :
 
 mettre le pj fini en public
+
+Upload sur git MAIS ENLEVER/VIDER LA BDD
 
 69_G0FUCKY0URS3LF_70  [TO REMOVE AT THE END]
 

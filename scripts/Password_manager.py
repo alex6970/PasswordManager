@@ -2,6 +2,8 @@ from tkinter import * # (python GUI)
 from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import ttk
+
+import pyperclip as clip
 import bcrypt
 
 from encryption_decryption import encrypt_data, decrypt_data, check_key
@@ -200,6 +202,10 @@ def submitKey():
 
 
 
+
+
+
+
 # --------------------------------------------HOME-WINDOW------------------------------------------------
 
 def home_window():
@@ -237,6 +243,9 @@ def home_window():
 
 
     window_home.mainloop()
+
+
+
 
 
 
@@ -306,7 +315,7 @@ def readPassLibrary():
     try:
         co, cur = create_connection()
 
-        cur.execute(""" SELECT website, username, email, password FROM passwords GROUP BY website """)
+        cur.execute(""" SELECT website, username, email, password FROM passwords """)
         fetch = cur.fetchall()
 
 
@@ -330,6 +339,13 @@ def readPassLibrary():
         count = count + 1
 
 
+    # coying the selected password to clipboard
+    def onSelection(e):
+        values = dataBox.item(dataBox.focus(), 'values')
+        clip.copy(values[3])
+        messagebox.showinfo("Copied to clipboard", "The password has been copied to clipboard !", icon="info")
+
+    dataBox.bind("<ButtonRelease-1>", onSelection)
 
 
 
@@ -887,11 +903,6 @@ def deletePass():
 
 
     window_delete.mainloop()
-
-
-
-
-
 
 
 
