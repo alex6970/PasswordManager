@@ -18,7 +18,7 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 ## Table of Contents
 
-- [Project Organization](#project-prganization)
+- [Project Organization](#project-organization)
 - [Features and uses](#features-and-uses-)
 - [Technologies & packages](#technologies--packages-)
 - [Screenshots](#screenshots-)
