@@ -9,7 +9,7 @@ def create_connection():
     cur = None
 
     try:
-        co = sqlite3.connect('database/pass.db')
+        co = sqlite3.connect('database/pass.db') # change here according to db name
         cur = co.cursor()
 
     except Exception as e:

@@ -1,4 +1,4 @@
-from tkinter import * # (python GUI)
+from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import ttk
