@@ -18,11 +18,11 @@ Allows to create, read, update and delete accounts and respective passwords. Cop
 
 ## Table of Contents
 
-- [Project Organization](#project-Organization)
-- [Features and uses](#features-and-uses)
-- [Technologies & packages](#technologies-&-packages)
-- [Screenshots](#screenshots)
-- [Credits](#screenshots)
+- [Project Organization](#Project-Organization)
+- [Features and uses](#Features-and-uses)
+- [Technologies & packages](#Technologies-&-packages)
+- [Screenshots](#Screenshots)
+- [Credits](#Credits)
 
 <br>
 
