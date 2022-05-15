@@ -58,18 +58,6 @@ def login_window():
 
     window = windowDisp('Sign In',350, 190, 2.5)
 
-    # # main window settings
-    # window = Tk()
-    # window.title('Sign In')
-    # #center window
-    # windowWidth = 350
-    # windowHeight = 190
-    # positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window.winfo_screenheight()/2.5 - windowHeight/2)
-    # window.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window.resizable(width=FALSE, height=FALSE)
-
-
 
     # window widgets
     title = Label(window, text="Welcome to your password manager.",font=("Verdana", 12), height=2)
@@ -158,17 +146,6 @@ def submitKey_window():
 
     window_sub = windowDisp('Your Key', 250, 100, 2.5)
 
-    # # main window settings
-    # window_sub = Tk()
-    # window_sub.title('Your Key')
-    # #center window
-    # windowWidth = 250
-    # windowHeight = 100
-    # positionRight = int(window_sub.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_sub.winfo_screenheight()/2.5 - windowHeight/2)
-    # window_sub.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_sub.resizable(width=FALSE, height=FALSE)
-
 
     # window frames
     frame = Frame(window_sub, borderwidth=2)
@@ -234,17 +211,6 @@ def home_window():
 
     window_home = windowDisp2('Welcome the PassMan home screen.', 500, 350, 2.5)
 
-    # window_home = Tk()
-    # window_home.title('Welcome the PassMan home screen.')
-    # #center window
-    # windowWidth = 500
-    # windowHeight = 350
-    # positionRight = int(window_home.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_home.winfo_screenheight()/2.5 - windowHeight/2)
-    # window_home.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_home.resizable(width=FALSE, height=FALSE)
-    # window_home['bg']='#130f40'
-
     frame = Frame(window_home, borderwidth=2)
     frame.pack(pady=10)
 
@@ -297,17 +263,6 @@ def readPassLibrary():
     global window_read
 
     window_read = windowDisp2('Your accounts and passwords.', 700, 500, 2.3)
-
-    # window_read = Tk()
-    # window_read.title('Your accounts and passwords.')
-    # #center window
-    # windowWidth = 700
-    # windowHeight = 500
-    # positionRight = int(window_read.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_read.winfo_screenheight()/2.3 - windowHeight/2)
-    # window_read.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_read.resizable(width=FALSE, height=FALSE)
-    # window_read['bg']='#130f40'
 
     frame = Frame(window_read, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
@@ -396,19 +351,6 @@ def addNewPass():
     global window_create
 
     window_create = windowDisp2('Create a new account with password', 550, 400, 2.3)
-
-    # window_create = Tk()
-    # window_create.title('Create a new account with password')
-    # #center window
-    # windowWidth = 550
-    # windowHeight = 400
-    # positionRight = int(window_create.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_create.winfo_screenheight()/2.3 - windowHeight/2)
-    # window_create.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_create.resizable(width=FALSE, height=FALSE)
-    # window_create['bg']='#130f40'
-
-
 
     frame = Frame(window_create, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP)
@@ -542,6 +484,9 @@ def addNewPass():
 
 
 
+
+
+
 # --------------------------------------------UPDATE---------------------------------------------------
 def updatePass():
 
@@ -551,17 +496,6 @@ def updatePass():
     global window_update
 
     window_update = windowDisp2('Update an account', 700, 600, 2.3)
-    # window_update = Tk()
-    # window_update.title('Update an account')
-    # #center window
-    # windowWidth = 700
-    # windowHeight = 600
-    # positionRight = int(window_update.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_update.winfo_screenheight()/2.3 - windowHeight/2)
-    # window_update.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_update.resizable(width=FALSE, height=FALSE)
-    # window_update['bg']='#130f40'
-
 
     frame = Frame(window_update, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
@@ -817,30 +751,15 @@ def updatePass():
 
 
 
-
-
-
 # --------------------------------------------DELETE---------------------------------------------------
 
 def deletePass():
-
-    # encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
 
     window_home.destroy()
 
     global window_delete
 
     window_delete = windowDisp2('Delete', 700, 450, 2.3)
-    # window_delete = Tk()
-    # window_delete.title('Delete')
-    # #center window
-    # windowWidth = 700
-    # windowHeight = 450
-    # positionRight = int(window_delete.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(window_delete.winfo_screenheight()/2.3 - windowHeight/2)
-    # window_delete.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    # window_delete.resizable(width=FALSE, height=FALSE)
-    # window_delete['bg']='#130f40'
 
     frame = Frame(window_delete, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
@@ -1003,6 +922,4 @@ def backButtonDelete():
     window_delete.destroy()
     home_window()
 
-
-# deletePass()
 login_window()
