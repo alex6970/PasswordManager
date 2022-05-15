@@ -9,6 +9,43 @@ from database_management import *
 
 
 
+# --------------------------------------------TKINTER-WINDOWS----------------------------------------------
+
+def windowDisp(title, w, h, div):
+    window = Tk()
+    window.title(title)
+
+    #center window
+    windowWidth = w
+    windowHeight = h
+    positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window.winfo_screenheight()/div - windowHeight/2)
+    window.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    window.resizable(width=FALSE, height=FALSE)
+
+    return window
+
+
+
+
+def windowDisp2(title, w, h, div):
+    window = Tk()
+    window.title(title)
+
+    #center window
+    windowWidth = w
+    windowHeight = h
+    positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window.winfo_screenheight()/div - windowHeight/2)
+    window.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    window.resizable(width=FALSE, height=FALSE)
+    window['bg']='#130f40'
+
+    return window
+
+
+
+
 # --------------------------------------------LOGIN-WINDOW-------------------------------------------------
 
 def login_window():
@@ -19,16 +56,18 @@ def login_window():
 
     global window
 
-    # main window settings
-    window = Tk()
-    window.title('Sign In')
-    #center window
-    windowWidth = 350
-    windowHeight = 190
-    positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window.winfo_screenheight()/2.5 - windowHeight/2)
-    window.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window.resizable(width=FALSE, height=FALSE)
+    window = windowDisp('Sign In',350, 190, 2.5)
+
+    # # main window settings
+    # window = Tk()
+    # window.title('Sign In')
+    # #center window
+    # windowWidth = 350
+    # windowHeight = 190
+    # positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window.winfo_screenheight()/2.5 - windowHeight/2)
+    # window.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window.resizable(width=FALSE, height=FALSE)
 
 
 
@@ -69,7 +108,7 @@ def login(): # help(login)
         Login function checking if stored hashed password is the same as the one submitted in the form.
     """
 
-    hashed = b'$2b$12$q3W5AOX8wFrXm2RqtNt3D.iqqvdL2EDyM3Be3tAQi3Ifbh3dU5C2q' # TO STORE IN DATABASE
+    hashed = b'$2b$12$q3W5AOX8wFrXm2RqtNt3D.iqqvdL2EDyM3Be3tAQi3Ifbh3dU5C2q' # HASH PW - TO CHANGE BY HASHING AND ENTERING HERE THE HASH
     input_pw = password.get().encode('utf-8')
 
     if identifier.get() == "Alex" and bcrypt.checkpw(input_pw, hashed):
@@ -116,16 +155,19 @@ def submitKey_window():
 
 
     global window_sub
-    # main window settings
-    window_sub = Tk()
-    window_sub.title('Your Key')
-    #center window
-    windowWidth = 250
-    windowHeight = 100
-    positionRight = int(window_sub.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_sub.winfo_screenheight()/2.5 - windowHeight/2)
-    window_sub.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_sub.resizable(width=FALSE, height=FALSE)
+
+    window_sub = windowDisp('Your Key', 250, 100, 2.5)
+
+    # # main window settings
+    # window_sub = Tk()
+    # window_sub.title('Your Key')
+    # #center window
+    # windowWidth = 250
+    # windowHeight = 100
+    # positionRight = int(window_sub.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_sub.winfo_screenheight()/2.5 - windowHeight/2)
+    # window_sub.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_sub.resizable(width=FALSE, height=FALSE)
 
 
     # window frames
@@ -184,19 +226,24 @@ def submitKey():
 # --------------------------------------------HOME-WINDOW------------------------------------------------
 
 def home_window():
+    """
+        Displays the home screen.
+    """
 
     global window_home
 
-    window_home = Tk()
-    window_home.title('Welcome the PassMan home screen.')
-    #center window
-    windowWidth = 500
-    windowHeight = 350
-    positionRight = int(window_home.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_home.winfo_screenheight()/2.5 - windowHeight/2)
-    window_home.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_home.resizable(width=FALSE, height=FALSE)
-    window_home['bg']='#130f40'
+    window_home = windowDisp2('Welcome the PassMan home screen.', 500, 350, 2.5)
+
+    # window_home = Tk()
+    # window_home.title('Welcome the PassMan home screen.')
+    # #center window
+    # windowWidth = 500
+    # windowHeight = 350
+    # positionRight = int(window_home.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_home.winfo_screenheight()/2.5 - windowHeight/2)
+    # window_home.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_home.resizable(width=FALSE, height=FALSE)
+    # window_home['bg']='#130f40'
 
     frame = Frame(window_home, borderwidth=2)
     frame.pack(pady=10)
@@ -241,21 +288,26 @@ def home_window():
 # --------------------------------------------READ------------------------------------------------
 
 def readPassLibrary():
+    """
+        Function that reads all the decrypted db with a treeview
+    """
 
     window_home.destroy()
 
     global window_read
 
-    window_read = Tk()
-    window_read.title('Your accounts and passwords.')
-    #center window
-    windowWidth = 700
-    windowHeight = 500
-    positionRight = int(window_read.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_read.winfo_screenheight()/2.3 - windowHeight/2)
-    window_read.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_read.resizable(width=FALSE, height=FALSE)
-    window_read['bg']='#130f40'
+    window_read = windowDisp2('Your accounts and passwords.', 700, 500, 2.3)
+
+    # window_read = Tk()
+    # window_read.title('Your accounts and passwords.')
+    # #center window
+    # windowWidth = 700
+    # windowHeight = 500
+    # positionRight = int(window_read.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_read.winfo_screenheight()/2.3 - windowHeight/2)
+    # window_read.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_read.resizable(width=FALSE, height=FALSE)
+    # window_read['bg']='#130f40'
 
     frame = Frame(window_read, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
@@ -299,7 +351,7 @@ def readPassLibrary():
     try:
         co, cur = create_connection()
 
-        cur.execute(""" SELECT website, username, email, password FROM passwords """)
+        cur.execute(""" SELECT website, username, email, password FROM passwords GROUP BY website """)
         fetch = cur.fetchall()
 
 
@@ -343,16 +395,18 @@ def addNewPass():
 
     global window_create
 
-    window_create = Tk()
-    window_create.title('Create a new account with password')
-    #center window
-    windowWidth = 550
-    windowHeight = 400
-    positionRight = int(window_create.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_create.winfo_screenheight()/2.3 - windowHeight/2)
-    window_create.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_create.resizable(width=FALSE, height=FALSE)
-    window_create['bg']='#130f40'
+    window_create = windowDisp2('Create a new account with password', 550, 400, 2.3)
+
+    # window_create = Tk()
+    # window_create.title('Create a new account with password')
+    # #center window
+    # windowWidth = 550
+    # windowHeight = 400
+    # positionRight = int(window_create.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_create.winfo_screenheight()/2.3 - windowHeight/2)
+    # window_create.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_create.resizable(width=FALSE, height=FALSE)
+    # window_create['bg']='#130f40'
 
 
 
@@ -496,18 +550,17 @@ def updatePass():
 
     global window_update
 
-    # encoded_pvKey = b'JsHt_gpV8itSFQXBmlcnxHZeKTUpK4OKaqS0SRv7zJU=' ## TO REMOVE and replace with a principal key getter
-
-    window_update = Tk()
-    window_update.title('Update an account')
-    #center window
-    windowWidth = 700
-    windowHeight = 600
-    positionRight = int(window_update.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_update.winfo_screenheight()/2.3 - windowHeight/2)
-    window_update.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_update.resizable(width=FALSE, height=FALSE)
-    window_update['bg']='#130f40'
+    window_update = windowDisp2('Update an account', 700, 600, 2.3)
+    # window_update = Tk()
+    # window_update.title('Update an account')
+    # #center window
+    # windowWidth = 700
+    # windowHeight = 600
+    # positionRight = int(window_update.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_update.winfo_screenheight()/2.3 - windowHeight/2)
+    # window_update.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_update.resizable(width=FALSE, height=FALSE)
+    # window_update['bg']='#130f40'
 
 
     frame = Frame(window_update, bg='#130f40') #bg='white' to undeerstand better the placement
@@ -777,16 +830,17 @@ def deletePass():
 
     global window_delete
 
-    window_delete = Tk()
-    window_delete.title('Delete')
-    #center window
-    windowWidth = 700
-    windowHeight = 450
-    positionRight = int(window_delete.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window_delete.winfo_screenheight()/2.3 - windowHeight/2)
-    window_delete.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    window_delete.resizable(width=FALSE, height=FALSE)
-    window_delete['bg']='#130f40'
+    window_delete = windowDisp2('Delete', 700, 450, 2.3)
+    # window_delete = Tk()
+    # window_delete.title('Delete')
+    # #center window
+    # windowWidth = 700
+    # windowHeight = 450
+    # positionRight = int(window_delete.winfo_screenwidth()/2 - windowWidth/2)
+    # positionDown = int(window_delete.winfo_screenheight()/2.3 - windowHeight/2)
+    # window_delete.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+    # window_delete.resizable(width=FALSE, height=FALSE)
+    # window_delete['bg']='#130f40'
 
     frame = Frame(window_delete, bg='#130f40') #bg='white' to undeerstand better the placement
     frame.pack(side=TOP, padx=(20,180))
